@@ -1,0 +1,2 @@
+# Interstellar-Travel
+As an interstellar traveller you need to find the shortest distance between your planet and destination planet, given a interstellar network/graph of planets and their edges. Edges are the only paths available from a given planet to another. There is a cost on each path. As a interstellar traveller you can only travel along the paths. It also has a simple UI, that accepts a spreadsheet containing the interstellar graph, and computes the shortest path.
