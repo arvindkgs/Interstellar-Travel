@@ -24,6 +24,10 @@ import com.akgs.spring.interstellartravel.data.Path;
 @CrossOrigin(origins="*")
 public class GraphController {
 	
+	public static void main(String[] args) {
+		
+	}
+	
 	@GetMapping("/{id}/shortestPath")
 	public Path getShortestPath(@PathVariable Integer graphId, @RequestParam String fromNode, @RequestParam String toNode) {
 		//Get graph
@@ -49,7 +53,9 @@ public class GraphController {
 		if(sp.isPresent())
 		  return sp.get();
 		else {
-			Path p = new ShortestPath(g, fromNode, toNode).compute();
+			ShortestPath shortestPath = new ShortestPath(g, fromNode, toNode);
+			shortestPath.crawl();
+			Path p = shortestPath.minDistances.get(fromNode);
 			g.addPath(fromNode, toNode, p);
 			return p;
 		}
@@ -57,6 +63,7 @@ public class GraphController {
 	
 	private class ShortestPath {
 		Set<String> visitedNodes;
+		//Contains minimum distances from target to node n, where n is key and path p is value in map
 		HashMap<String, Path> minDistances;
 		Graph g;
 		String fromNode;
@@ -68,13 +75,14 @@ public class GraphController {
 			this.fromNode = fromNode;
 			this.toNode = toNode;
 		}
-		Path compute() {
+		void crawl() {
 			crawl(fromNode);
 		}
 		private void crawl(String currNode) {
 			//Get connectedNodes of currNode
 			int currMinDistance = -1;
-			Path p = null;
+			Path p = new Path();
+			p.setDistance(-1); //unreachable path
 			
 			//For each connectedNode
 			for(Entry<String, Integer> connectedNode : g.getConnectedNodes(currNode).entrySet()) {
@@ -82,7 +90,7 @@ public class GraphController {
 				Integer weight = connectedNode.getValue();
 				//check, if node already visited, then check min distance
 				if(visitedNodes.contains(node)) {
-					if(currMinDistance == -1 || currMinDistance > (minDistances.get(node).getDistance() + weight)) {
+					if(minDistances.get(node).getDistance() != -1 && currMinDistance > (minDistances.get(node).getDistance() + weight)) {
 						currMinDistance = minDistances.get(node).getDistance() + weight;
 						p = new Path(currNode, toNode);
 						p.setDistance(currMinDistance);
@@ -94,8 +102,8 @@ public class GraphController {
 				else if(node.equals(toNode)) {
 					if(currMinDistance > weight) {
 						currMinDistance = weight;
-						p = new Path();
-						p.getEdges().add(new Edge(currNode, node, weight));
+						p = new Path(currNode, toNode);
+						p.getEdges().add(new Edge(currNode, toNode, weight));
 					}
 				}
 				else {
@@ -112,15 +120,10 @@ public class GraphController {
 					}
 				}
 			}
-			//TODO: if currMinDistance is still -1, then this currNode cannot reach toNode
-			
+			//Add currNode to VisitedNodes
+			visitedNodes.add(currNode);
+			minDistances.put(currNode, p);
 		}
 	}
 
-	private void computeShortestPath(Graph g, String fromNode, String toNode) {
-		// TODO Auto-generated method stub
-		Set<String> visitedNodes = new HashSet<String>();
-		HashMap<String, Integer> minDistances = new HashMap<String, Integer>();
-		crawl(g, fromNode, toNode, )
-	}
 }
