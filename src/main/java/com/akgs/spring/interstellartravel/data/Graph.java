@@ -23,6 +23,7 @@ public class Graph {
 		this.name = name;
 		edges = new ArrayList<Edge>();
 		paths = new HashMap<String, HashMap<String, Path>>();
+		connectedNodes = new HashMap<String, HashMap<String, Integer>>();
 	}
 	public void addEdge(Edge e) {
 		if(e == null)
