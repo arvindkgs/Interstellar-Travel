@@ -63,7 +63,7 @@ public class GraphController {
 
 	private class ShortestPath {
 		Set<String> visitedNodes;
-		// Contains minimum distances from target to node n, where n is key and path p
+		// Contains minimum distances from node n to target node, where n is key and path p
 		// is value in map
 		HashMap<String, Path> minDistances;
 		Graph g;

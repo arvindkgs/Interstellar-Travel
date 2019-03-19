@@ -15,13 +15,11 @@ import java.util.Set;
  * @param paths
  */
 public class Graph {
-	private List<Edge> edges;
 	private String name;
 	private HashMap<String, HashMap<String, Path>> paths;
 	private HashMap<String, HashMap<String, Integer>> connectedNodes;
 	public Graph(String name){
 		this.name = name;
-		edges = new ArrayList<Edge>();
 		paths = new HashMap<String, HashMap<String, Path>>();
 		connectedNodes = new HashMap<String, HashMap<String, Integer>>();
 	}
@@ -36,7 +34,6 @@ public class Graph {
 		Integer weight = connectedNodes.get(e.getFromNode()).get(e.getToNode());
 		if(weight == null || (weight != null && weight > e.getWeight())) {
 			connectedNodes.get(e.getFromNode()).put(e.getToNode(), e.getWeight());
-			edges.add(e);
 		}
 	}
 	public HashMap<String, Integer> getConnectedNodes(String frmNode) {
